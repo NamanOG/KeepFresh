@@ -78,7 +78,7 @@ export function AddFoodDialog({ open, onOpenChange, onAdd }: AddFoodDialogProps)
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Bananas, Milk, Chicken"
+                placeholder="e.g., Bananas, Milk, Vegetables"
                 className="min-h-[48px] border-2 border-gray-200 focus:border-emerald-500 rounded-xl"
                 required
               />
