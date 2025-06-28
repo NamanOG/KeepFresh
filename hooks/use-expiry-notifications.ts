@@ -12,8 +12,9 @@ export interface FoodItem {
 
 export function useExpiryNotifications(foodItems: FoodItem[]) {
   const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>('default')
+  const [serviceWorkerReg, setServiceWorkerReg] = useState<ServiceWorkerRegistration | null>(null)
 
-  // Check and request notification permission
+  // Initialize Service Worker and check notification permission
   useEffect(() => {
     console.log('🔔 Initializing notification system...')
     
@@ -27,10 +28,59 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
       return
     }
 
+    // Register Service Worker for notifications
+    const registerServiceWorker = async () => {
+      if ('serviceWorker' in navigator) {
+        try {
+          console.log('🔔 Registering service worker...')
+          const registration = await navigator.serviceWorker.register('/sw.js', {
+            scope: '/'
+          })
+          console.log('🔔 Service worker registered:', registration)
+          
+          // Wait for the service worker to be ready
+          const readyRegistration = await navigator.serviceWorker.ready
+          console.log('🔔 Service worker ready:', readyRegistration)
+          setServiceWorkerReg(readyRegistration)
+          
+          // Handle service worker updates
+          registration.addEventListener('updatefound', () => {
+            console.log('🔔 Service worker update found')
+            const newWorker = registration.installing
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('🔔 New service worker installed, reloading...')
+                  window.location.reload()
+                }
+              })
+            }
+          })
+          
+        } catch (error) {
+          console.error('🔔 Service worker registration failed:', error)
+          toast({
+            title: "⚠️ Service Worker Failed",
+            description: "Falling back to basic notifications. Some features may be limited on mobile.",
+            variant: "destructive"
+          })
+        }
+      } else {
+        console.log('🔔 Service workers not supported')
+        toast({
+          title: "⚠️ Limited Mobile Support",
+          description: "Your browser has limited notification support.",
+          variant: "destructive"
+        })
+      }
+    }
+
+    registerServiceWorker()
+
     console.log('🔔 Current permission:', Notification.permission)
     setPermissionStatus(Notification.permission)
 
-    // Always try to request permission, even if it shows as granted
+    // Request permission
     const requestPermission = async () => {
       try {
         console.log('🔔 Requesting notification permission...')
@@ -41,28 +91,17 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
         if (permission === 'granted') {
           console.log('🔔 Permission granted! Testing notification...')
           
-          // Send a test notification to confirm it's working
-          try {
-            const testNotification = new Notification('✅ KeepFresh Notifications Enabled!', {
-              body: 'You will now receive alerts for expiring food items.',
-              icon: '/KeepFresh.png',
-              tag: 'permission-granted-test'
-            })
+          // Send a test notification
+          await sendNotification(
+            '✅ KeepFresh Notifications Enabled!',
+            'You will now receive alerts for expiring food items.',
+            'permission-granted-test'
+          )
 
-            testNotification.onclick = () => {
-              window.focus()
-              testNotification.close()
-            }
-
-            setTimeout(() => testNotification.close(), 4000)
-
-            toast({
-              title: "🔔 Notifications Enabled",
-              description: "You'll receive alerts when food items are expiring soon!",
-            })
-          } catch (error) {
-            console.error('🔔 Test notification failed:', error)
-          }
+          toast({
+            title: "🔔 Notifications Enabled",
+            description: "You'll receive alerts when food items are expiring soon!",
+          })
         } else if (permission === 'denied') {
           console.log('🔔 Permission denied')
           toast({
@@ -79,13 +118,114 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
         }
       } catch (error) {
         console.error('🔔 Error requesting permission:', error)
+        toast({
+          title: "⚠️ Permission Request Failed",
+          description: "There was an error requesting notification permissions.",
+          variant: "destructive"
+        })
       }
     }
 
-    // Request permission after a short delay to ensure the page is loaded
+    // Helper function to send notifications with fallback
+    const sendNotification = async (title: string, body: string, tag: string) => {
+      try {
+        // Try Service Worker method first (preferred for mobile)
+        if (serviceWorkerReg && 'showNotification' in serviceWorkerReg) {
+          console.log('🔔 Using Service Worker notification')
+          await serviceWorkerReg.showNotification(title, {
+            body,
+            icon: '/KeepFresh.png',
+            badge: '/KeepFresh.png',
+            tag,
+            requireInteraction: false,
+            silent: false,
+            vibrate: [200, 100, 200],
+            data: { timestamp: Date.now() },
+            actions: [
+              {
+                action: 'view',
+                title: 'View Items'
+              }
+            ]
+          })
+        } else {
+          // Fallback to regular Notification constructor
+          console.log('🔔 Using regular Notification constructor')
+          const notification = new Notification(title, {
+            body,
+            icon: '/KeepFresh.png',
+            badge: '/KeepFresh.png',
+            tag,
+            requireInteraction: false,
+            silent: false,
+            timestamp: Date.now()
+          })
+
+          notification.onclick = () => {
+            window.focus()
+            notification.close()
+          }
+
+          setTimeout(() => notification.close(), 4000)
+        }
+      } catch (error) {
+        console.error('🔔 Failed to send notification:', error)
+        throw error
+      }
+    }
+
+    // Request permission after a short delay
     const timer = setTimeout(requestPermission, 1000)
     return () => clearTimeout(timer)
-  }, [])
+  }, [serviceWorkerReg])
+
+  // Helper function to send notifications (available to effects below)
+  const sendNotification = async (title: string, body: string, tag: string, requireInteraction = false) => {
+    try {
+      // Try Service Worker method first (preferred for mobile)
+      if (serviceWorkerReg && 'showNotification' in serviceWorkerReg) {
+        console.log('🔔 Using Service Worker notification')
+        await serviceWorkerReg.showNotification(title, {
+          body,
+          icon: '/KeepFresh.png',
+          badge: '/KeepFresh.png',
+          tag,
+          requireInteraction,
+          silent: false,
+          vibrate: [200, 100, 200],
+          data: { timestamp: Date.now() },
+          actions: [
+            {
+              action: 'view',
+              title: 'View Items'
+            }
+          ]
+        })
+      } else {
+        // Fallback to regular Notification constructor
+        console.log('🔔 Using regular Notification constructor')
+        const notification = new Notification(title, {
+          body,
+          icon: '/KeepFresh.png',
+          badge: '/KeepFresh.png',
+          tag,
+          requireInteraction,
+          silent: false,
+          timestamp: Date.now()
+        })
+
+        notification.onclick = () => {
+          window.focus()
+          notification.close()
+        }
+
+        const autoCloseDelay = requireInteraction ? 15000 : 8000
+        setTimeout(() => notification.close(), autoCloseDelay)
+      }
+    } catch (error) {
+      console.error('🔔 Failed to send notification:', error)
+    }
+  }
 
   // Monitor food items and send notifications
   useEffect(() => {
@@ -111,7 +251,7 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
     })))
 
     // Send notifications for expiring items
-    expiringItems.forEach(item => {
+    expiringItems.forEach(async (item) => {
       const daysLeft = getDaysUntilExpiry(item.expiry_date)
       const notificationKey = `keepfresh-notification-${item.id}-${item.expiry_date}`
       
@@ -144,51 +284,28 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
       }
 
       try {
-        const notification = new Notification(title, {
+        await sendNotification(
+          title,
           body,
-          icon: '/KeepFresh.png',
-          badge: '/KeepFresh.png',
-          tag: `expiry-${item.id}-${daysLeft}`,
-          requireInteraction: daysLeft <= 1, // More urgent notifications stay visible
-          silent: false,
-          timestamp: Date.now()
-        })
-
-        notification.onclick = () => {
-          console.log('🔔 Notification clicked!')
-          window.focus()
-          notification.close()
-        }
-
-        notification.onshow = () => {
-          console.log(`🔔 Notification shown for ${item.name}`)
-        }
-
-        notification.onerror = (error) => {
-          console.error('🔔 Notification error:', error)
-        }
+          `expiry-${item.id}-${daysLeft}`,
+          daysLeft <= 1 // More urgent notifications require interaction
+        )
 
         // Mark as sent for today
         localStorage.setItem(notificationKey, today)
-
-        // Auto-close after delay (longer for more urgent items)
-        const autoCloseDelay = daysLeft <= 1 ? 15000 : 8000
-        setTimeout(() => {
-          notification.close()
-        }, autoCloseDelay)
 
       } catch (error) {
         console.error(`🔔 Failed to create notification for ${item.name}:`, error)
       }
     })
 
-  }, [foodItems, permissionStatus])
+  }, [foodItems, permissionStatus, serviceWorkerReg])
 
   // Send notification for newly added expiring items
   useEffect(() => {
     if (!foodItems.length || permissionStatus !== 'granted') return
 
-    foodItems.forEach(item => {
+    foodItems.forEach(async (item) => {
       const daysLeft = getDaysUntilExpiry(item.expiry_date)
       const itemAge = Date.now() - new Date(item.created_at).getTime()
       const isNewlyAdded = itemAge < 15000 // Added within last 15 seconds
@@ -200,23 +317,14 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
           console.log(`🔔 Sending new item notification for ${item.name}`)
           
           try {
-            const notification = new Notification('⚠️ Added Expiring Item!', {
-              body: `${item.name} expires ${daysLeft === 0 ? 'today' : daysLeft === 1 ? 'tomorrow' : `in ${daysLeft} days`}!`,
-              icon: '/KeepFresh.png',
-              tag: `new-${item.id}`,
-              requireInteraction: true
-            })
-
-            notification.onclick = () => {
-              window.focus()
-              notification.close()
-            }
+            await sendNotification(
+              '⚠️ Added Expiring Item!',
+              `${item.name} expires ${daysLeft === 0 ? 'today' : daysLeft === 1 ? 'tomorrow' : `in ${daysLeft} days`}!`,
+              `new-${item.id}`,
+              true
+            )
 
             localStorage.setItem(notificationKey, 'sent')
-
-            setTimeout(() => {
-              notification.close()
-            }, 10000)
 
           } catch (error) {
             console.error(`🔔 Failed to create new item notification:`, error)
@@ -224,7 +332,7 @@ export function useExpiryNotifications(foodItems: FoodItem[]) {
         }
       }
     })
-  }, [foodItems, permissionStatus])
+  }, [foodItems, permissionStatus, serviceWorkerReg])
 
   // Cleanup old notification flags
   useEffect(() => {
