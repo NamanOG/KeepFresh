@@ -24,14 +24,14 @@ export const metadata: Metadata = {
     title: "KeepFresh | Smart Food Expiry Tracker",
     description:
       "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
-    url: "https://your-domain.com", // Replace with your actual domain
+    url: "https://keepfresh.vercel.app/", // Replace with your actual domain
     siteName: "KeepFresh",
     images: [
       {
         url: "/KeepFresh.png", // Using PNG instead of ICO for better compatibility
         width: 1200,
         height: 630,
-        alt: "KeepFresh - Smart Food Expiry Tracker",
+        alt: "KeepFresh | Smart Food Expiry Tracker",
       },
     ],
     locale: "en_US",
