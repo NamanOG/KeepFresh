@@ -27,8 +27,6 @@ const categories = [
   { value: "Fruits", emoji: "🍎" },
   { value: "Vegetables", emoji: "🥕" },
   { value: "Dairy", emoji: "🥛" },
-  { value: "Meat", emoji: "🥩" },
-  { value: "Seafood", emoji: "🐟" },
   { value: "Grains", emoji: "🌾" },
   { value: "Pantry", emoji: "🥫" },
   { value: "Frozen", emoji: "🧊" },
