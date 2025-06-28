@@ -19,6 +19,33 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  // Add Open Graph meta tags for social media sharing
+  openGraph: {
+    title: "KeepFresh | Smart Food Expiry Tracker",
+    description:
+      "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
+    url: "https://your-domain.com", // Replace with your actual domain
+    siteName: "KeepFresh",
+    images: [
+      {
+        url: "/KeepFresh.png", // Using PNG instead of ICO for better compatibility
+        width: 1200,
+        height: 630,
+        alt: "KeepFresh - Smart Food Expiry Tracker",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  // Add Twitter Card meta tags
+  twitter: {
+    card: "summary_large_image",
+    title: "KeepFresh | Smart Food Expiry Tracker",
+    description:
+      "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
+    images: ["/KeepFresh.png"],
+    creator: "@your_twitter_handle", // Replace with your Twitter handle if you have one
+  },
   icons: {
     icon: [
       {
@@ -72,7 +99,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
