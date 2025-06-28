@@ -9,14 +9,8 @@ import { AddFoodDialog } from "@/components/add-food-dialog"
 import { RecipeDialog } from "@/components/recipe-dialog"
 import { createClient } from "@/lib/supabase"
 import { toast } from "@/hooks/use-toast"
-
-interface FoodItem {
-  id: string
-  name: string
-  category: string
-  expiry_date: string
-  created_at: string
-}
+import { useExpiryNotifications, type FoodItem } from "@/hooks/use-expiry-notifications"
+import { getDaysUntilExpiry } from "@/lib/get-days-until-expiry"
 
 export default function HomePage() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([])
@@ -27,16 +21,12 @@ export default function HomePage() {
 
   const supabase = createClient()
 
+  // Handle notifications automatically
+  useExpiryNotifications(foodItems)
+
   useEffect(() => {
     fetchFoodItems()
-    requestNotificationPermission()
   }, [])
-
-  const requestNotificationPermission = async () => {
-    if ("Notification" in window && Notification.permission === "default") {
-      await Notification.requestPermission()
-    }
-  }
 
   const fetchFoodItems = async () => {
     try {
@@ -100,14 +90,6 @@ export default function HomePage() {
         variant: "destructive",
       })
     }
-  }
-
-  const getDaysUntilExpiry = (expiryDate: string) => {
-    const today = new Date()
-    const expiry = new Date(expiryDate)
-    const diffTime = expiry.getTime() - today.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays
   }
 
   const getStatusBadge = (daysLeft: number) => {

@@ -30,28 +30,28 @@ KeepFresh is a smart food expiry tracking application I created to help you keep
 
 1. Clone the repository
 
-```bash
+\`\`\`bash
 git clone https://github.com/your-username/keepfresh.git
 cd keepfresh
-```
+\`\`\`
 
 2. Install dependencies
 
-```bash
+\`\`\`bash
 pnpm install
-```
+\`\`\`
 
 3. Set up environment variables
 
-```bash
+\`\`\`bash
 cp .env.example .env.local
-```
+\`\`\`
 
 4. Run the development server
 
-```bash
+\`\`\`bash
 pnpm dev
-```
+\`\`\`
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 

@@ -2,16 +2,16 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "KeepFresh | Smart Food Expiry Tracker",
-  description:
-    "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
-  keywords: ["food tracker", "expiry dates", "reduce waste", "recipe suggestions", "fresh food"],
-  authors: [{ name: "KeepFresh" }],
+  description: "Track your food expiry dates and get recipe ideas to reduce waste",
+  keywords: ["food tracker", "expiry dates", "food waste", "recipes", "kitchen management"],
+  authors: [{ name: "KeepFresh Team" }],
   creator: "KeepFresh",
   publisher: "KeepFresh",
   formatDetection: {
@@ -19,74 +19,32 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  // Add Open Graph meta tags for social media sharing
+  metadataBase: new URL("https://keepfresh-app.vercel.app"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "KeepFresh | Smart Food Expiry Tracker",
-    description:
-      "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
-    url: "https://keepfresh.vercel.app/", // Replace with your actual domain
+    description: "Track your food expiry dates and get recipe ideas to reduce waste",
+    url: "https://keepfresh-app.vercel.app",
     siteName: "KeepFresh",
     images: [
       {
-        url: "/KeepFresh.png", // Using PNG instead of ICO for better compatibility
+        url: "/KeepFresh.png",
         width: 1200,
         height: 630,
-        alt: "KeepFresh | Smart Food Expiry Tracker",
+        alt: "KeepFresh - Smart Food Expiry Tracker",
       },
     ],
     locale: "en_US",
     type: "website",
   },
-  // Add Twitter Card meta tags
   twitter: {
     card: "summary_large_image",
     title: "KeepFresh | Smart Food Expiry Tracker",
-    description:
-      "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
+    description: "Track your food expiry dates and get recipe ideas to reduce waste",
     images: ["/KeepFresh.png"],
-    creator: "@your_twitter_handle", // Replace with your Twitter handle if you have one
-  },
-  icons: {
-    icon: [
-      {
-        url: "/KeepFresh.png",
-        sizes: "any",
-      },
-      {
-        url: "/KeepFresh.png",
-        sizes: "16x16",
-        type: "image/png",
-      },
-      {
-        url: "/KeepFresh.png",
-        sizes: "32x32",
-        type: "image/png",
-      },
-    ],
-    apple: [
-      {
-        url: "/KeepFresh.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/safari-pinned-tab.svg",
-        color: "#059669",
-      },
-    ],
-  },
-  manifest: "/site.webmanifest",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#059669" },
-    { media: "(prefers-color-scheme: dark)", color: "#10b981" },
-  ],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
+    creator: "@keepfresh_app",
   },
   robots: {
     index: true,
@@ -99,6 +57,22 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  icons: {
+    icon: [
+      { url: "/KeepFresh.png", sizes: "32x32", type: "image/png" },
+      { url: "/KeepFresh.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [{ url: "/KeepFresh.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/KeepFresh.png",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
+  category: "food",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -107,18 +81,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" href="/KeepFresh.png" sizes="any" />
-        <link rel="icon" href="/KeepFresh.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/KeepFresh.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/KeepFresh.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#059669" />
-      </head>
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
