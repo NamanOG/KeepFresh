@@ -1,30 +1,68 @@
-# Food expiry app
+[![KeepFresh Screenshot](public/KeepFresh-interface.png)](https://keepfresh.vercel.app/)
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+# KeepFresh - Food Expiry Tracker
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/namans-projects-973a354e/keepfresh)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/HyBRfxw5Rxr)
+A modern web application I built to help you track food expiration dates and reduce food waste.
+
+[![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+KeepFresh is a smart food expiry tracking application I created to help you keep track of your groceries and their expiration dates. Never let food go to waste again with timely notifications and an intuitive interface.
 
-## Deployment
+## Features
 
-Your project is live at:
+- 📅 Track expiration dates for all your food items
+- 🔔 Get notified before items expire
+- 📱 Responsive design for desktop and mobile
+- 🍽️ Recipe suggestions for items nearing expiry
+- 📊 Visual dashboard to manage your inventory
 
-**[https://vercel.com/namans-projects-973a354e/keepfresh](https://vercel.com/namans-projects-973a354e/keepfresh)**
+## Tech Stack
 
-## Build your app
+- **Frontend**: Next.js 14, React, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Database**: Supabase
+- **Package Manager**: pnpm
 
-Continue building your app on:
+## Getting Started
 
-**[https://v0.dev/chat/projects/HyBRfxw5Rxr](https://v0.dev/chat/projects/HyBRfxw5Rxr)**
+1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/keepfresh.git
+cd keepfresh
+```
+
+2. Install dependencies
+
+```bash
+pnpm install
+```
+
+3. Set up environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+4. Run the development server
+
+```bash
+pnpm dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## How It Works
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+1. Add food items with their expiration dates
+2. View your inventory in an organized dashboard
+3. Receive notifications for items nearing expiry
+4. Get recipe suggestions to use up expiring items
+5. Mark items as consumed or disposed of
+
+## Contributing
+
+Feel free to submit issues and pull requests to help improve KeepFresh!
