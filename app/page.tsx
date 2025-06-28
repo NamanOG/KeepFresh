@@ -25,17 +25,21 @@ export default function HomePage() {
   useExpiryNotifications(foodItems)
 
   useEffect(() => {
+    console.log("🚀 HomePage mounted, fetching food items...")
     fetchFoodItems()
   }, [])
 
   const fetchFoodItems = async () => {
+    console.log("📥 Fetching food items from database...")
     try {
       const { data, error } = await supabase.from("food_items").select("*").order("expiry_date", { ascending: true })
 
       if (error) throw error
+
+      console.log("✅ Fetched", data?.length || 0, "food items:", data)
       setFoodItems(data || [])
     } catch (error) {
-      console.error("Error fetching food items:", error)
+      console.error("❌ Error fetching food items:", error)
       toast({
         title: "Error",
         description: "Failed to load food items",
@@ -47,21 +51,27 @@ export default function HomePage() {
   }
 
   const addFoodItem = async (item: Omit<FoodItem, "id" | "created_at">) => {
+    console.log("➕ Adding new food item:", item)
     try {
       const { data, error } = await supabase.from("food_items").insert([item]).select().single()
 
       if (error) throw error
 
-      setFoodItems((prev) =>
-        [...prev, data].sort((a, b) => new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime()),
+      console.log("✅ Food item added to database:", data)
+
+      const newFoodItems = [...foodItems, data].sort(
+        (a, b) => new Date(a.expiry_date).getTime() - new Date(b.expiry_date).getTime(),
       )
+
+      console.log("🔄 Updating food items state, new count:", newFoodItems.length)
+      setFoodItems(newFoodItems)
 
       toast({
         title: "✅ Success",
         description: "Food item added successfully!",
       })
     } catch (error) {
-      console.error("Error adding food item:", error)
+      console.error("❌ Error adding food item:", error)
       toast({
         title: "❌ Error",
         description: "Failed to add food item",
@@ -71,6 +81,7 @@ export default function HomePage() {
   }
 
   const deleteFoodItem = async (id: string) => {
+    console.log("🗑️ Deleting food item:", id)
     try {
       const { error } = await supabase.from("food_items").delete().eq("id", id)
 
@@ -83,7 +94,7 @@ export default function HomePage() {
         description: "Food item removed successfully!",
       })
     } catch (error) {
-      console.error("Error deleting food item:", error)
+      console.error("❌ Error deleting food item:", error)
       toast({
         title: "❌ Error",
         description: "Failed to remove food item",
