@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "KeepFresh - Smart Food Expiry Tracker",
+  title: "KeepFresh | Smart Food Expiry Tracker",
   description:
     "Track your food expiry dates and get recipe ideas to reduce waste. Never let fresh ingredients go bad again!",
   keywords: ["food tracker", "expiry dates", "reduce waste", "recipe suggestions", "fresh food"],
