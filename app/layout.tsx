@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/KeepFresh.png",
+        url: "/KeepFresh.ico",
         sizes: "any",
       },
       {
