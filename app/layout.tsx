@@ -49,23 +49,23 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/KeepFresh.ico",
+        url: "/KeepFresh.png",
         sizes: "any",
       },
       {
-        url: "/icon-16x16.png",
+        url: "/KeepFresh.png",
         sizes: "16x16",
         type: "image/png",
       },
       {
-        url: "/icon-32x32.png",
+        url: "/KeepFresh.png",
         sizes: "32x32",
         type: "image/png",
       },
     ],
     apple: [
       {
-        url: "/apple-touch-icon.png",
+        url: "/KeepFresh.png",
         sizes: "180x180",
         type: "image/png",
       },
@@ -109,10 +109,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/icon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/KeepFresh.png" sizes="any" />
+        <link rel="icon" href="/KeepFresh.png" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/KeepFresh.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/KeepFresh.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#059669" />
       </head>

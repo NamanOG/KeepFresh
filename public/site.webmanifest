@@ -1,21 +1,16 @@
 {
-  "name": "KeepFresh - Smart Food Expiry Tracker",
+  "name": "KeepFresh | Smart Food Expiry Tracker",
   "short_name": "KeepFresh",
   "description": "Track your food expiry dates and get recipe ideas to reduce waste",
   "icons": [
     {
-      "src": "/icon-16x16.png",
-      "sizes": "16x16",
+      "src": "/KeepFresh.png",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-32x32.png", 
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
+      "src": "/KeepFresh.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],
