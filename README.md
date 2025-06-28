@@ -66,3 +66,7 @@ pnpm dev
 ## Contributing
 
 Feel free to submit issues and pull requests to help improve KeepFresh!
+
+## Credits
+
+Created by [Naman](https://github.com/NamanOG) with help from [v0.dev](https://v0.dev).
